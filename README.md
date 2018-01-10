@@ -1,5 +1,10 @@
+###Project-2 (Dine 5-2-1)
+
 This project will tentatively be called Dine 5-2-1.
 The purpose of this app will be to assist couples in deciding where to eat.
+
+
+
 ![What Do You Want?!](https://media.giphy.com/media/E87jjnSCANThe/giphy.gif)
 
 It will utilize the yelp api to load a list of ~50 restaurants based on some simple criteria($$$, location), and display them to a user.
