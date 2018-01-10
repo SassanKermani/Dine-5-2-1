@@ -1,4 +1,4 @@
-###Project-2 (Dine 5-2-1)
+### Project-2 (Dine 5-2-1)
 
 This project will tentatively be called Dine 5-2-1.
 The purpose of this app will be to assist couples in deciding where to eat.
