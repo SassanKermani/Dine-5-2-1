@@ -1,15 +1,15 @@
-var auths = require('./config/env');
-var express = require('express');
-var request = require('request');
-var app = express();
-var passport = require('passport');
-var flash = require('connect-flash');
-var morgan = require('morgan');
-var bodyParser = require('body-parser');
-var session = require('express-session');
+let auths = require('./config/env');
+let express = require('express');
+let request = require('request');
+let app = express();
+let passport = require('passport');
+let flash = require('connect-flash');
+let morgan = require('morgan');
+let bodyParser = require('body-parser');
+let session = require('express-session');
 
-var bearerToken = auths.bearerToken;
-var googleKey = auths.googleKey;
+let bearerToken = process.env.bearerToken || auths.bearerToken;
+let googleKey = auths.googleKey;
 
 
 
@@ -19,7 +19,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-// var db = require('./models');
+// let db = require('./models');
 
 //app.use(express.static('public'));
 
@@ -27,6 +27,21 @@ app.get('/',function(req,res){
 
 });
 
+app.get('/newSession', function(req,res){
+		let options = {
+		url: 'https://api.yelp.com/v3/businesses/search?location=12955+Lafayette+St,Thornton,Co,80241&radius=8000&price=1,2,3&sort_by=rating&term=food&open_now=true&limit=50',
+		auth:{
+			bearer: bearerToken
+		}
+	};
+	request.get(options, (err, reqApi, body)=>{
+		if(err) console.log('there has been an error', err);
+		let restaurantData = JSON.parse(body);
+		console.log('we got info back!');
+		console.log(restaurantData);
+		res.send(restaurantData);
+	});
+});
 
 app.delete('/restaurants/:user',function(req,res){
 	//once restaurants are selected to be deleted, this will remove the restaurant from the list of available ones.
