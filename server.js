@@ -27,11 +27,13 @@ app.use(bodyParser.json());
 //app.use(express.static('public'));
 
 //landing page for app.  Login functionality, checks if there's a session in play and allows for a new session search queries.
-app.get('/',function(req,res){
+app.get('/',(req,res)=>{
 	res.send('you got here!');
 });
 
-app.get('/newSession', function(req,res){
+
+//req.session.passport.user.id FTW!
+app.get('/newSession', (req,res)=>{
 		let options = {
 		url: 'https://api.yelp.com/v3/businesses/search?location=12955+Lafayette+St,Thornton,Co,80241&radius=8000&price=1,2,3&sort_by=rating&term=food&open_now=true&limit=50',
 		auth:{
@@ -43,11 +45,11 @@ app.get('/newSession', function(req,res){
 		let restaurantData = JSON.parse(body);
 		console.log('We made an API Call!');
 		//This will refresh a session with new data.
-		//Make sure to put something in the {} when we get to users!!!!!
+		//Make sure to put something in the {} when we get to users!!!!!  Maybe coupleId: uniqueCoupleId
 		db.Restaurant.remove({});
-		restaurantData.businesses.forEach(function(business){
+		restaurantData.businesses.forEach((business)=>{
 			let foodCats = [];
-			business.categories.forEach(function(category){
+			business.categories.forEach((category)=>{
 				foodCats.push(category.title);
 			});
 			let newRestaurant = {
@@ -62,7 +64,7 @@ app.get('/newSession', function(req,res){
 				phone: business.phone
 				//coupleId?
 			};
-			db.Restaurant.create(newRestaurant,function(err, newRest){
+			db.Restaurant.create(newRestaurant,(err, newRest)=>{
 				if(err) console.log("Error Creating Restaurant:",err);
 				console.log("Created New Restaurant:",newRest.name);
 			});
@@ -73,16 +75,16 @@ app.get('/newSession', function(req,res){
 
 //Main functional page of the app.  Will detect user and display appropriate information.  If not that user's turn will display Shakeitspeare poems(Stretch).
 //Needs to determine how many restaurants there are.  If >5, reduce to 5.  If >2, reduce to 2.  If >1, reduce to 1.  If 1, That's where you go!
-app.get('/reduceRestaurants', function(req, res){
+app.get('/reduceRestaurants', (req, res)=>{
 	res.send("Congratulations!  The redirect worked!");
 });
 
-app.delete('/reduceRestaurants',function(req,res){
+app.delete('/reduceRestaurants',(req,res)=>{
 	//once restaurants are selected to be deleted, this will remove the restaurant from the list of available ones.
 	//request is an array of ids in JSON
 });
 
-app.get('/whosTurn/:user', function(req,res){
+app.get('/whosTurn/:user', (req,res)=>{
 	//will access the mongoDB and determine if it is the user's turn yet.  Might end up using JSON data instead of :user.
 	//if it is not the user's turn, will return a 'waiting for your partner to choose'
 	//if it is the user's turn, will bring up the selection page
@@ -90,12 +92,12 @@ app.get('/whosTurn/:user', function(req,res){
 });
 
 //catch all bad pages
-app.get('*', function(req,res){
+app.get('*', (req,res)=>{
 	res.send('You have attempted to reach a page that does not exist');
 });
 
 
 //Server starting up
-app.listen(process.env.PORT || 3000, function(){
+app.listen(process.env.PORT || 3000, ()=>{
 	console.log("Potato Server is running on port", process.env.port || 3000);
 });
