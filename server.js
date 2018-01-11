@@ -1,4 +1,4 @@
-let auths = require('./config/env');
+// let auths = require('./config/env');
 let express = require('express');
 let request = require('request');
 let app = express();
@@ -8,8 +8,8 @@ let morgan = require('morgan');
 let bodyParser = require('body-parser');
 let session = require('express-session');
 
-let bearerToken = process.env.bearerToken || auths.bearerToken;
-let googleKey = auths.googleKey;
+let bearerToken = process.env.bearerToken || require('./config/env').bearerToken;
+// let googleKey = auths.googleKey;
 
 
 
