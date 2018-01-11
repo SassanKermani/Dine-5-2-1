@@ -2,6 +2,7 @@
 let express = require('express');
 let request = require('request');
 let app = express();
+let path = require('path');
 let passport = require('passport');
 let flash = require('connect-flash');
 let morgan = require('morgan');
@@ -22,9 +23,15 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+//setting up ejs
+app.set('views', path.join(__dirname, 'views'));
+app.engine('ejs',require('ejs').renderFile);
+app.set('view engine', 'ejs');
+
 // let db = require('./models');
 
-//app.use(express.static('public'));
+//sends up css files to users
+app.use(express.static('public'));
 
 //landing page for app.  Login functionality, checks if there's a session in play and allows for a new session search queries.
 app.get('/',(req,res)=>{
@@ -34,8 +41,8 @@ app.get('/',(req,res)=>{
 
 //req.session.passport.user.id FTW!
 app.get('/newSession', (req,res)=>{
-		let options = {
-		url: 'https://api.yelp.com/v3/businesses/search?location=12955+Lafayette+St,Thornton,Co,80241&radius=8000&price=1,2,3&sort_by=rating&term=food&open_now=true&limit=50',
+	let options = {
+		url: 'https://api.yelp.com/v3/businesses/search?location=12955+Lafayette+St,Thornton,Co,80241&radius=8000&price=1,2,3&sort_by=rating&term=food&open_now=true&limit=30',
 		auth:{
 			bearer: bearerToken
 		}
@@ -46,8 +53,8 @@ app.get('/newSession', (req,res)=>{
 		console.log('We made an API Call!');
 		//This will refresh a session with new data.
 		//Make sure to put something in the {} when we get to users!!!!!  Maybe coupleId: uniqueCoupleId
-		db.Restaurant.remove({});
-		restaurantData.businesses.forEach((business)=>{
+		db.Restaurant.remove({},()=>{
+			restaurantData.businesses.forEach((business)=>{
 			let foodCats = [];
 			business.categories.forEach((category)=>{
 				foodCats.push(category.title);
@@ -70,13 +77,20 @@ app.get('/newSession', (req,res)=>{
 			});
 		});
 		res.redirect('/reduceRestaurants');
+		});
 	});
 });
 
 //Main functional page of the app.  Will detect user and display appropriate information.  If not that user's turn will display Shakeitspeare poems(Stretch).
 //Needs to determine how many restaurants there are.  If >5, reduce to 5.  If >2, reduce to 2.  If >1, reduce to 1.  If 1, That's where you go!
 app.get('/reduceRestaurants', (req, res)=>{
-	res.send("Congratulations!  The redirect worked!");
+	//put coupleId in here!
+	db.Restaurant.find({},(err, restaurants)=>{
+		if(err) console.log('There has been an error',err);
+		console.log(restaurants);
+		res.render('./removeCardLayout',{restaurants:restaurants});
+	});
+
 });
 
 app.delete('/reduceRestaurants',(req,res)=>{

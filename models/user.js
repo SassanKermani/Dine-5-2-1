@@ -15,18 +15,18 @@ let User = new Schema({
 // let User = mongoose.model('User',UserSchema);
 
 //using Async versions to ensure no issues with interupting other server operations
-User.methods.encrypt = function(password){
-	bcrypt.genSalt(function(err, salt){
+User.methods.encrypt =(password)=>{
+	bcrypt.genSalt((err, salt)=>{
 		if(err) console.log('There has been an error making Salt:',err);
-		bcrypt.hash(password, salt, function(err,hash){
+		bcrypt.hash(password, salt, (err,hash)=>{
 			if(err) console.log('There has been an error making Hash:',err);
 			this.password = hash;
 		});
 	});
 };
 
-User.methods.authPW =function(passwordAttempt){
-	bcrypt.compare(passwordAttempt,this.password,function(err, result){
+User.methods.authPW =(passwordAttempt)=>{
+	bcrypt.compare(passwordAttempt,this.password,(err, result)=>{
 		return result;
 	});
 };

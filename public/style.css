@@ -20,7 +20,7 @@
 	object-fit: cover;
 }
 
-works for now, but isn't as clean as I'd like.  Figure out later.
+/*works for now, but isn't as clean as I'd like.  Figure out later.*/
 .card .scroll-box{
 	height:38vh;
 	overflow-y: scroll;
