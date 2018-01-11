@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 //app.use(express.static('public'));
 
 app.get('/',function(req,res){
-
+	res.send('you got here!');
 });
 
 app.get('/newSession', function(req,res){
