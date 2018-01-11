@@ -22,7 +22,7 @@
 								</div>
 							</div>
 							<div class = "scroll-box px-2">
-								<p class = "card-text"><%= restaurants[i].categories.forEach((category)=>{return category+", ";}) %></p>
+								<p class = "card-text"><% restaurants[i].categories.forEach((category)=>{ %><%= category %>, <%;}) %></p>
 								<a class = "card-text" href = <%= restaurants[i].website %> target="_blank"><%= restaurants[i].name %>'s Yelp Page</a>
 								<p class = "card-text"><%= restaurants[i].address %></p>
 								<p class = "card-text"><%= restaurants[i].phone %></p>
