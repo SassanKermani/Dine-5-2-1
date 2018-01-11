@@ -8,10 +8,13 @@ let morgan = require('morgan');
 let bodyParser = require('body-parser');
 let session = require('express-session');
 
+
+//keys and tokens
 let bearerToken = process.env.bearerToken || require('./config/env').bearerToken;
 // let googleKey = auths.googleKey;
 
-
+//getting models, connecting to mongodb
+let db = require('./models');
 
 //using morgan in dev mode to log every route request.  Hopefully it will help me find out where I break things
 app.use(morgan('dev'));
@@ -23,6 +26,7 @@ app.use(bodyParser.json());
 
 //app.use(express.static('public'));
 
+//landing page for app.  Login functionality, checks if there's a session in play and allows for a new session search queries.
 app.get('/',function(req,res){
 	res.send('you got here!');
 });
@@ -39,13 +43,46 @@ app.get('/newSession', function(req,res){
 		let restaurantData = JSON.parse(body);
 		console.log('we got info back!');
 		console.log(restaurantData);
-		res.send(restaurantData);
+		let restList = [];
+		//This will refresh a session with new data.
+		//Make sure to put something in the {} when we get to users!!!!!
+		db.Restaurant.delete({});
+		restaurantData.businesses.forEach(function(business){
+			let foodCats = [];
+			business.categories.forEach(function(category){
+				foodCats.push(category.title);
+			});
+			let newRestaurant = {
+				name: business.name,
+				categories: foodCats,
+				price: business.price,
+				rating: business.rating,
+				reviews: business.review_count,
+				image: business.image_url,
+				website: business.url,
+				address: business.location.display_address,
+				phone: business.phone
+				//coupleId?
+			};
+			db.Restaurant.create(newRestaurant,function(err, newRest){
+				if(err) console.log("Error Creating Restaurant:",err);
+				console.log("Created New Restaurant:",newRest);
+			});
+			restList.push(newRestaurant);
+		});
+		res.redirect('/reduceRestaurants');
 	});
 });
 
-app.delete('/restaurants/:user',function(req,res){
+//Main functional page of the app.  Will detect user and display appropriate information.  If not that user's turn will display Shakeitspeare poems(Stretch).
+//Needs to determine how many restaurants there are.  If >5, reduce to 5.  If >2, reduce to 2.  If >1, reduce to 1.  If 1, That's where you go!
+app.get('/reduceRestaurants', function(req, res){
+
+});
+
+app.delete('/reduceRestaurants',function(req,res){
 	//once restaurants are selected to be deleted, this will remove the restaurant from the list of available ones.
-	//returned as an array of ids in JSON
+	//request is an array of ids in JSON
 });
 
 app.get('/whosTurn/:user', function(req,res){

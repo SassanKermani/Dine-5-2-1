@@ -6,7 +6,7 @@ let User = require('./user');
 mongoose.connect( process.env.MONGODB_URI || 
                   process.env.MONGOLAB_URI || 
                   process.env.MONGOHQ_URL || 
-                  "mongodb://localhost/personal-api");
+                  "mongodb://localhost/dine5-2-1");
 
 
 module.exports.Restaurant = Restaurant;
