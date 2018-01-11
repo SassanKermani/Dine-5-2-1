@@ -43,7 +43,6 @@ app.get('/newSession', function(req,res){
 		let restaurantData = JSON.parse(body);
 		console.log('we got info back!');
 		console.log(restaurantData);
-		let restList = [];
 		//This will refresh a session with new data.
 		//Make sure to put something in the {} when we get to users!!!!!
 		db.Restaurant.delete({});
@@ -66,9 +65,8 @@ app.get('/newSession', function(req,res){
 			};
 			db.Restaurant.create(newRestaurant,function(err, newRest){
 				if(err) console.log("Error Creating Restaurant:",err);
-				console.log("Created New Restaurant:",newRest);
+				console.log("Created New Restaurant:",newRest.name);
 			});
-			restList.push(newRestaurant);
 		});
 		res.redirect('/reduceRestaurants');
 	});
@@ -77,7 +75,7 @@ app.get('/newSession', function(req,res){
 //Main functional page of the app.  Will detect user and display appropriate information.  If not that user's turn will display Shakeitspeare poems(Stretch).
 //Needs to determine how many restaurants there are.  If >5, reduce to 5.  If >2, reduce to 2.  If >1, reduce to 1.  If 1, That's where you go!
 app.get('/reduceRestaurants', function(req, res){
-
+	res.send("Congratulations!  The redirect worked!");
 });
 
 app.delete('/reduceRestaurants',function(req,res){
