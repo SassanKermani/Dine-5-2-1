@@ -41,11 +41,10 @@ app.get('/newSession', function(req,res){
 	request.get(options, (err, reqApi, body)=>{
 		if(err) console.log('there has been an error', err);
 		let restaurantData = JSON.parse(body);
-		console.log('we got info back!');
-		console.log(restaurantData);
+		console.log('We made an API Call!');
 		//This will refresh a session with new data.
 		//Make sure to put something in the {} when we get to users!!!!!
-		db.Restaurant.delete({});
+		db.Restaurant.remove({});
 		restaurantData.businesses.forEach(function(business){
 			let foodCats = [];
 			business.categories.forEach(function(category){
