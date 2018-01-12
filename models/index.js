@@ -8,6 +8,5 @@ mongoose.connect( process.env.MONGODB_URI ||
                   process.env.MONGOHQ_URL || 
                   "mongodb://localhost/dine5-2-1");
 
-
 module.exports.Restaurant = Restaurant;
 module.exports.User = User;
