@@ -19,4 +19,15 @@ $(document).ready((blah)=>{
 	$('#numToLeave').text(numToLeave);
 	}
 	console.log("NumToLeavePotato:",numToLeave);
+	$('button').click(function(){
+		console.log(this,'button clicked!');
+		console.log($(this).closest('.cardContainer'),'is the closest card container!');
+		console.log($(this).closest('.cardContainer').data('restaurant-id'));
+	});
+	// console.log(typeof($('button')));
+	// $('.cardContainer').on('click', 'button',(e)=>{
+	// 	console.log('button clicked!');
+	// 	console.log(this);
+	// 	console.log(e.target);
+	// });
 });
