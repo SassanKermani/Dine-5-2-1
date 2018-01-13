@@ -3,11 +3,11 @@ let bcrypt = require('bcrypt');
 let Schema = mongoose.Schema;
 
 //Why don't we model this?  Will figure out later
-let User = new Schema({
-	user: String,
-	password:String,
 	//partner will be another user's id.  this should be better for the purpose of this app as it allows for some permanence.  
 	//Otherwise I could make a collection that requires 2 ids.
+let UserSchema = new Schema({
+	email: String,
+	password: String,
 	partner: String
 });
 
@@ -15,18 +15,24 @@ let User = new Schema({
 // let User = mongoose.model('User',UserSchema);
 
 //using Async versions to ensure no issues with interupting other server operations
-User.methods.encrypt =(password)=>{
-	bcrypt.genSalt((err, salt)=>{
-		if(err) console.log('There has been an error making Salt:',err);
-		bcrypt.hash(password, salt, (err,hash)=>{
-			if(err) console.log('There has been an error making Hash:',err);
-			this.password = hash;
-		});
-	});
+UserSchema.methods.encrypt =(password)=>{
+	return bcrypt.hashSync(password, bcrypt.genSaltSync());
+	// this is causing an async error.  Refactor later but get running thru sync right now
+	// bcrypt.genSalt((err, salt)=>{
+	// 	if(err) console.log('There has been an error making Salt:',err);
+	// 	console.log("salt:",salt);
+	// 	bcrypt.hash(password, salt, (err, hash)=>{
+	// 		if(err) console.log('There has been an error making Hash:',err);
+	// 		console.log("hash:",hash);
+	// 		return hash;
+	// 	});
+	// });
 };
 
-User.methods.authPW =(passwordAttempt)=>{
-	bcrypt.compare(passwordAttempt,this.password,(err, result)=>{
-		return result;
-	});
+UserSchema.methods.authPW =(passwordAttempt)=>{
+	return bcrypt.compareSync(passwordAttempt,this.password);
 };
+
+let User = mongoose.model('User', UserSchema);
+
+module.exports = User;

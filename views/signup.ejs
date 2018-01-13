@@ -1,0 +1,10 @@
+<h3>Signup Page</h3>
+<% if (message.length > 0) { %>
+	<div class = "alert alert-danger"><%=message%></div>
+<% } %>
+<form action="/signup" method="POST">
+	<input type="email" name="email" placeholder="email@domain.com">
+	<input type="password" name="password" placeholder="password">
+	<input type="email" name="partner" placeholder="partner's email">
+	<input type="submit">
+</form>

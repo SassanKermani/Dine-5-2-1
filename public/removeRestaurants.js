@@ -20,14 +20,19 @@ $(document).ready((blah)=>{
 	}
 	console.log("NumToLeavePotato:",numToLeave);
 	$('button').click(function(){
-		console.log(this,'button clicked!');
-		console.log($(this).closest('.cardContainer'),'is the closest card container!');
-		console.log($(this).closest('.cardContainer').data('restaurant-id'));
+		console.log("Removing Id",$(this).closest('.cardContainer').data('restaurant-id'));
+		$.ajax({
+			url: '/reduceRestaurants/' + $(this).closest('.cardContainer').data('restaurant-id'),
+			type: 'DELETE',
+			success: ()=>{
+				$(this).closest('.cardContainer').remove();
+			}
+		});
+
+		// //could do this on the backEnd... might be a better way.
+		// if($('.card').length === numToLeave){
+		// 	//switch user
+		// 	//prevent anymore restaurants
+		// }
 	});
-	// console.log(typeof($('button')));
-	// $('.cardContainer').on('click', 'button',(e)=>{
-	// 	console.log('button clicked!');
-	// 	console.log(this);
-	// 	console.log(e.target);
-	// });
 });

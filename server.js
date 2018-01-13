@@ -1,21 +1,15 @@
 // let auths = require('./config/env');
-let express = require('express');
-let request = require('request');
-let app = express();
-let path = require('path');
-let passport = require('passport');
-let flash = require('connect-flash');
-let morgan = require('morgan');
-let bodyParser = require('body-parser');
-let session = require('express-session');
+const express = require('express');
+const app = express();
+const path = require('path');
+const passport = require('passport');
+const flash = require('connect-flash');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const router = require('./config/routes');
 
 
-//keys and tokens
-let bearerToken = process.env.bearerToken || require('./config/env').bearerToken;
-// let googleKey = auths.googleKey;
-
-//getting models, connecting to mongodb
-let db = require('./models');
 
 //using morgan in dev mode to log every route request.  Hopefully it will help me find out where I break things
 app.use(morgan('dev'));
@@ -28,87 +22,28 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs',require('ejs').renderFile);
 app.set('view engine', 'ejs');
 
-// let db = require('./models');
-
 //sends up css files to users
 app.use(express.static('public'));
 
-//landing page for app.  Login functionality, checks if there's a session in play and allows for a new session search queries.
-app.get('/',(req,res)=>{
-	res.send('you got here!');
-});
+//Session is used to genereate a hash.  Users denied without the secret.
+//sets up passport
+app.use(session({ secret: 'This is a long string of stuff to generate a hash' })); 
+app.use(passport.initialize());
+app.use(passport.session()); 
+app.use(flash());
 
 
-//req.session.passport.user.id FTW!
-app.get('/newSession', (req,res)=>{
-	let options = {
-		url: 'https://api.yelp.com/v3/businesses/search?location=12955+Lafayette+St,80241&radius=8000&price=1,2,3&sort_by=rating&term=food&open_now=true&limit=30',
-		auth:{
-			bearer: bearerToken
-		}
-	};
-	request.get(options, (err, reqApi, body)=>{
-		if(err) console.log('there has been an error', err);
-		let restaurantData = JSON.parse(body);
-		console.log('We made an API Call!');
-		//This will refresh a session with new data.
-		//Make sure to put something in the {} when we get to users!!!!!  Maybe coupleId: uniqueCoupleId
-		db.Restaurant.remove({},()=>{
-			restaurantData.businesses.forEach((business)=>{
-			let foodCats = [];
-			business.categories.forEach((category)=>{
-				foodCats.push(category.title);
-			});
-			let newRestaurant = {
-				name: business.name,
-				categories: foodCats,
-				price: business.price,
-				rating: business.rating,
-				reviews: business.review_count,
-				image: business.image_url,
-				website: business.url,
-				address: business.location.display_address,
-				phone: business.display_phone
-				//coupleId?
-			};
-			db.Restaurant.create(newRestaurant,(err, newRest)=>{
-				if(err) console.log("Error Creating Restaurant:",err);
-				console.log("Created New Restaurant:",newRest.name);
-			});
-		});
-		res.redirect('/reduceRestaurants');
-		});
-	});
-});
+// //basically, perform the passport.js function, which assigns authorization/authentication functionality
+require('./config/passport')(passport);
 
-//Main functional page of the app.  Will detect user and display appropriate information.  If not that user's turn will display Shakeitspeare poems(Stretch).
-//Needs to determine how many restaurants there are.  If >5, reduce to 5.  If >2, reduce to 2.  If >1, reduce to 1.  If 1, That's where you go!
-app.get('/reduceRestaurants', (req, res)=>{
-	//put coupleId in here!
-	db.Restaurant.find({},(err, restaurants)=>{
-		if(err) console.log('There has been an error',err);
-		console.log(restaurants);
-		res.render('./removeCardLayout',{restaurants:restaurants});
-	});
+// //asigning currentUser
+// app.use((req,res,next)=>{
+// 	res.locals.currentUser = req.user;
+// 	next();
+// });
 
-});
 
-app.delete('/reduceRestaurants',(req,res)=>{
-	//once restaurants are selected to be deleted, this will remove the restaurant from the list of available ones.
-	//request is an array of ids in JSON
-});
-
-app.get('/whosTurn/:user', (req,res)=>{
-	//will access the mongoDB and determine if it is the user's turn yet.  Might end up using JSON data instead of :user.
-	//if it is not the user's turn, will return a 'waiting for your partner to choose'
-	//if it is the user's turn, will bring up the selection page
-	res.send('This will check to see if the other user has completed their turn, and if so, send the user to perform selections');
-});
-
-//catch all bad pages
-app.get('*', (req,res)=>{
-	res.send('You have attempted to reach a page that does not exist');
-});
+app.use('/', router);
 
 
 //Server starting up
