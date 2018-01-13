@@ -22,17 +22,11 @@ $(document).ready((blah)=>{
 	$('button').click(function(){
 		console.log("Removing Id",$(this).closest('.cardContainer').data('restaurant-id'));
 		$.ajax({
-			url: '/reduceRestaurants/' + $(this).closest('.cardContainer').data('restaurant-id'),
+			url: '/Restaurants/' + $(this).closest('.cardContainer').data('restaurant-id'),
 			type: 'DELETE',
 			success: ()=>{
 				$(this).closest('.cardContainer').remove();
 			}
 		});
-
-		// //could do this on the backEnd... might be a better way.
-		// if($('.card').length === numToLeave){
-		// 	//switch user
-		// 	//prevent anymore restaurants
-		// }
 	});
 });

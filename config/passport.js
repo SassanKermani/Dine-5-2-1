@@ -2,13 +2,15 @@
 let LocalStrategy = require('passport-local').Strategy;
 let User = require('../models').User;
 
-module.exports = (passport)=>{
-	passport.serializeUser((user,callback)=>{
+module.exports = function(passport){
+	passport.serializeUser(function(user,callback){
+		console.log('serializing user');
 		callback(null,user.id);
 	});
 
-	passport.deserializeUser((id,callback)=>{
-		User.findById(id, (err,user)=>{
+	passport.deserializeUser(function(id,callback){
+		console.log('deserializing user');
+		User.findById(id, function(err,user){
 			callback(err, user);
 		});
 	});
@@ -19,7 +21,7 @@ module.exports = (passport)=>{
 		passwordField: 'password',
 		passReqToCallback: true
 	}, (req, email, password, callback)=>{
-		User.findOne({'email':email}, (err,user)=>{
+		User.findOne({'email':email}, function(err,user){
 			if(err) return callback(err);
 
 			if(user){
@@ -28,9 +30,7 @@ module.exports = (passport)=>{
 				let newUser = new User();
 				newUser.email = email;
 				console.log(password);
-				console.log(newUser.encrypt(password));
-				newUser.password = newUser.encrypt(password);
-
+				newUser.password = password;
 				newUser.save((err)=>{
 					if(err) return callback(err);
 					return callback(null, newUser);
@@ -45,17 +45,18 @@ module.exports = (passport)=>{
 		passReqToCallback: true
 	}, (req, email, password, callback)=>{
 		User.findOne({'email': email}, (err, user)=>{
+			console.log(user);
 			if(err) return callback(err);
 
 			if(!user){
 				return callback(null, false, req.flash('signupMessage', 'Email not found, please sign up'));
 			}
 
-			if(!User.authPW(password)){
-				return callback(null, false, req.flash('signupMessage', 'Incorrect Password'));
-			}
-
-			return callback(null, user);
+			user.authPW(password,(err,isMatch)=>{
+				if(err) return callback(err);
+				if(!isMatch) callback(null, false, req.flash('signupMessage', 'Incorrect Password'));
+				return callback(null, user);
+			});
 		});
 	}));
 };

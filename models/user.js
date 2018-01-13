@@ -15,22 +15,32 @@ let UserSchema = new Schema({
 // let User = mongoose.model('User',UserSchema);
 
 //using Async versions to ensure no issues with interupting other server operations
-UserSchema.methods.encrypt =(password)=>{
-	return bcrypt.hashSync(password, bcrypt.genSaltSync());
-	// this is causing an async error.  Refactor later but get running thru sync right now
-	// bcrypt.genSalt((err, salt)=>{
-	// 	if(err) console.log('There has been an error making Salt:',err);
-	// 	console.log("salt:",salt);
-	// 	bcrypt.hash(password, salt, (err, hash)=>{
-	// 		if(err) console.log('There has been an error making Hash:',err);
-	// 		console.log("hash:",hash);
-	// 		return hash;
-	// 	});
-	// });
-};
+UserSchema.pre('save',function(next){
+	var user = this;
+	console.log("User is:",user);
+	if(!user.isModified('password')) return next();
 
-UserSchema.methods.authPW =(passwordAttempt)=>{
-	return bcrypt.compareSync(passwordAttempt,this.password);
+	bcrypt.genSalt(function(err, salt){
+		if(err) return next(err);
+		console.log("salt:",salt);
+		bcrypt.hash(user.password, salt, function(err, hash){
+			if(err) return next(err);
+			console.log("hash:",hash);
+			user.password = hash;
+			console.log('successfully created a hashed userPW');
+			next();
+		});
+	});
+});
+
+UserSchema.methods.authPW =function(passwordAttempt, callback){
+	console.log("Authorizing PW!");
+	console.log("Attempt:", passwordAttempt);
+	console.log("this",this);
+	bcrypt.compare(passwordAttempt,this.password,function(err, isValid){
+		if(err) callback(err);
+		callback(null, isValid);
+	});
 };
 
 let User = mongoose.model('User', UserSchema);
