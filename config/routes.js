@@ -30,7 +30,8 @@ router.route('/login')
 
 //req.session.passport.user.id FTW!
 router.route('/newSession')
-	 .get(authenticateUser, mainController.getNewSession);
+	.get(authenticateUser, mainController.getNewSession)
+	.post(authenticateUser, mainController.postNewSession);
 
  router.route('/Restaurants/:id')
  	.delete(authenticateUser, mainController.deleteRestaurants);

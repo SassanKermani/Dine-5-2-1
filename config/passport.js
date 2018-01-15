@@ -41,6 +41,7 @@ module.exports = function(passport){
 						if(err) return callback(err);
 						console.log('couple found was: ', couple);
 						if(couple){
+							console.log("we found a couple!", couple);
 							couple.user2 = newUser._id;
 							couple.save((err)=>{
 								if(err)return console.log("Error in saving Couple", err);
@@ -51,22 +52,24 @@ module.exports = function(passport){
 								console.log("We DID IT!  WE PAIRED USERS!");
 								return callback(null, newUser);
 							}));
+						}else{
+							console.log('No Couple found, creating new one');
+							let newCouple = new Couple();
+							newCouple.user1 = newUser._id;
+							newCouple.user2 = req.body.partner;
+							newCouple.save((err)=>{
+								if(err) return console.log("error in creating new couple", err);
+							});
+							newUser.couple = newCouple._id;
+							newUser.save((err)=>{
+								if(err) return console.log("error in saving newUser CoupleId",err);
+								console.log("WE DID IT!  WE MADE A COUPLE!");
+								return callback(null, newUser);
+							});
 						}
-						console.log('No Couple found, creating new one');
-						let newCouple = new Couple();
-						newCouple.user1 = newUser._id;
-						newCouple.user2 = req.body.partner;
-						newCouple.save((err)=>{
-							if(err) return console.log("error in creating new couple", err);
-						});
-						newUser.couple = newCouple._id;
-						newUser.save((err)=>{
-							if(err) return console.log("error in saving newUser CoupleId",err);
-							console.log("WE DID IT!  WE MADE A COUPLE!");
-							return callback(null, newUser);
-						});
 					});
-					return callback(null, newUser);
+					console.log("I SHOULD NEVER GET HERE!");
+					// return callback(null, newUser);
 				});
 			}
 		});

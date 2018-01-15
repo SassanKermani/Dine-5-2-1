@@ -39,6 +39,12 @@ var postLogin = (req, res, next)=>{
 };
 
 var getNewSession = (req, res)=>{
+	console.log('Got to get new Session');
+	res.render('./partials/newSearch');
+};
+
+var postNewSession = (req, res)=>{
+	console.log('got to post new session');
 	//removing spaces from address and adding + signs
 	let address = req.body.address.replace(/ /g, '+');
 	//setting default search parameter for price to everything
@@ -55,7 +61,8 @@ var getNewSession = (req, res)=>{
 	}
 
 	let options = {
-		url: 'https://api.yelp.com/v3/businesses/search?location='+address+'&radius=8000&price='+price+'&sort_by=rating&term=food&open_now=true&limit=25',
+		//removing &radius=8000 to see if i get better results
+		url: 'https://api.yelp.com/v3/businesses/search?location='+address+'&price='+price+'&sort_by=rating&term=food&open_now=true&limit=25',
 		auth:{
 			bearer: bearerToken
 		}
@@ -67,7 +74,7 @@ var getNewSession = (req, res)=>{
 		//This will refresh a session with new data.
 		//Make sure to put something in the {} when we get to users!!!!!  Maybe coupleId: uniqueCoupleId
 		console.log('req.user:',req.user);
-		db.Restaurant.remove({},()=>{
+		db.Restaurant.remove({couple: req.user.couple},()=>{
 			restaurantData.businesses.forEach((business)=>{
 			let foodCats = [];
 			business.categories.forEach((category)=>{
@@ -96,7 +103,7 @@ var getNewSession = (req, res)=>{
 };
 
 var getRestaurants = (req, res)=>{
-	db.Restaurant.find({},(err, restaurants)=>{
+	db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
 		if(err) console.log('There has been an error',err);
 		console.log("Making",restaurants.length,"restaurants");
 		res.render('./removeCardLayout',{restaurants:restaurants});
@@ -109,8 +116,8 @@ var deleteRestaurants = (req, res)=>{
 		console.log('Restaurant Deleted!');
 		//functionality for determining whether we keep allowing this or change the page.
 		//COUPLE ID!!!
-		db.Restaurant.find({},(restaurants)=>{
-			console.log(restaurants);
+		db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
+			console.log(restaurants.length,"restaurants left");;
 		});
 		res.send('restaurant deleted!');
 	});
@@ -130,6 +137,7 @@ module.exports.postSignup = postSignup;
 module.exports.getLogin = getLogin;
 module.exports.postLogin = postLogin;
 module.exports.getNewSession = getNewSession;
+module.exports.postNewSession = postNewSession;
 module.exports.getRestaurants = getRestaurants;
 module.exports.deleteRestaurants = deleteRestaurants;
 module.exports.getLogout = getLogout;
