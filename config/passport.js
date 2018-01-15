@@ -57,6 +57,7 @@ module.exports = function(passport){
 							let newCouple = new Couple();
 							newCouple.user1 = newUser._id;
 							newCouple.user2 = req.body.partner;
+							newCouple.whosTurn = newUser._id;
 							newCouple.save((err)=>{
 								if(err) return console.log("error in creating new couple", err);
 							});
