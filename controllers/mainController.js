@@ -123,6 +123,11 @@ var deleteRestaurants = (req, res)=>{
 	});
 };
 
+var getWaiting = (req, res)=>{
+	console.log("And now we wait");
+	res.send("and now we wait");
+};
+
 var getLogout = (req, res)=>{
 	req.logout();
 	res.redirect('/');
@@ -140,5 +145,6 @@ module.exports.getNewSession = getNewSession;
 module.exports.postNewSession = postNewSession;
 module.exports.getRestaurants = getRestaurants;
 module.exports.deleteRestaurants = deleteRestaurants;
+module.exports.getWaiting = getWaiting;
 module.exports.getLogout = getLogout;
 module.exports.getBadRoutes = getBadRoutes;
