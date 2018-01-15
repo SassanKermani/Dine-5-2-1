@@ -13,9 +13,10 @@ var getSignup = (req, res)=>{
 };
 
 var postSignup = (req, res, next)=>{
+	console.log(req.body)
 	let signupStrategy=passport.authenticate('local-signup',{
 		//route doesn't have to show a page, but redirect to something that will interact with the user.
-		successRedirect: '/',
+		successRedirect: '/createPair',
 		failureRedirect: '/signup',
 		failureFlash: true
 	});
@@ -37,9 +38,28 @@ var postLogin = (req, res, next)=>{
 	return loginStrategy(req, res, next);
 };
 
+var postCreatePair = (req, res, next)=>{
+
+};
+
 var getNewSession = (req, res)=>{
+	//removing spaces from address and adding + signs
+	let address = req.body.address.replace(/ /g, '+');
+	//setting default search parameter for price to everything
+	let price = '1,2,3,4';
+	//updating search paramters to what user input
+	if(req.body.OneDollar || req.body.TwoDollar || req.body.ThreeDollar || req.body.FourDollar){
+		price = '';
+		if(req.body.OneDollar) price = price + req.body.OneDollar+',';
+		if(req.body.TwoDollar) price = price + req.body.TwoDollar+',';
+		if(req.body.ThreeDollar) price = price + req.body.ThreeDollar+',';
+		if(req.body.FourDollar) price = price + req.body.FourDollar+',';
+		//yelp doesn't like trailing commas.  this fixes that
+		price = price.slice(0,-1);
+	}
+
 	let options = {
-		url: 'https://api.yelp.com/v3/businesses/search?location=12955+Lafayette+St,80241&radius=8000&price=1,2,3&sort_by=rating&term=food&open_now=true&limit=30',
+		url: 'https://api.yelp.com/v3/businesses/search?location='+address+'&radius=8000&price='+price+'&sort_by=rating&term=food&open_now=true&limit=25',
 		auth:{
 			bearer: bearerToken
 		}
@@ -102,7 +122,7 @@ var deleteRestaurants = (req, res)=>{
 var getLogout = (req, res)=>{
 	req.logout();
 	res.redirect('/');
-}
+};
 
 var getBadRoutes = (req, res)=>{
 	res.send('You have attempted to reach a page that does not exist');
@@ -112,6 +132,7 @@ module.exports.getSignup = getSignup;
 module.exports.postSignup = postSignup;
 module.exports.getLogin = getLogin;
 module.exports.postLogin = postLogin;
+module.exports.postCreatePair = postCreatePair;
 module.exports.getNewSession = getNewSession;
 module.exports.getRestaurants = getRestaurants;
 module.exports.deleteRestaurants = deleteRestaurants;

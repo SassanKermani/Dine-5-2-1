@@ -8,7 +8,7 @@ let Schema = mongoose.Schema;
 let UserSchema = new Schema({
 	email: String,
 	password: String,
-	partner: String
+	couple: String
 });
 
 //taking out b/c passport doesn't model and it is messing with the methods portion.  I think the schema needs the methods not the model but I don't know why

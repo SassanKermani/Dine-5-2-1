@@ -11,6 +11,10 @@ let authenticateUser = (req,res,next)=>{
 	res.redirect('/');
 };
 
+let isUsersTurn = (req,res,next)=>{
+
+};
+
 //landing page for router.  Login functionality, checks if there's a session in play and allows for a new session search queries.
 router.get('/',(req,res)=>{
 	res.send('you got here!');
@@ -23,6 +27,9 @@ router.route('/signup')
 router.route('/login')
 	.get(mainController.getLogin)
 	.post(mainController.postLogin);
+
+router.route('/createPair')
+	.post(mainController.postCreatePair);
 
 //req.session.passport.user.id FTW!
 router.route('/newSession')

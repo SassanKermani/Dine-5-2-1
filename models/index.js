@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let Restaurant = require('./restaurant');
 let User = require('./user');
+let Couple = require('./couple');
 
 //this should allow for the heroku instance of mongo to take over.  If local, local will take over.
 mongoose.connect( process.env.MONGODB_URI || 
@@ -10,3 +11,4 @@ mongoose.connect( process.env.MONGODB_URI ||
 
 module.exports.Restaurant = Restaurant;
 module.exports.User = User;
+module.exports.Couple = Couple;
