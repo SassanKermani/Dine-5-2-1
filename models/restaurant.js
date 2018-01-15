@@ -13,7 +13,7 @@ let RestaurantSchema = new Schema({
 	website: String,
 	address: String,
 	phone: String,
-	//maybe need to put a coupleId?
+	couple: String
 });
 
 let Restaurant = mongoose.model('Restaurant',RestaurantSchema);

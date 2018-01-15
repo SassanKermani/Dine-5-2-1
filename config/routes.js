@@ -28,9 +28,6 @@ router.route('/login')
 	.get(mainController.getLogin)
 	.post(mainController.postLogin);
 
-router.route('/createPair')
-	.post(mainController.postCreatePair);
-
 //req.session.passport.user.id FTW!
 router.route('/newSession')
 	 .get(authenticateUser, mainController.getNewSession);

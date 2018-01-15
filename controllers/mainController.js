@@ -16,7 +16,7 @@ var postSignup = (req, res, next)=>{
 	console.log(req.body)
 	let signupStrategy=passport.authenticate('local-signup',{
 		//route doesn't have to show a page, but redirect to something that will interact with the user.
-		successRedirect: '/createPair',
+		successRedirect: '/',
 		failureRedirect: '/signup',
 		failureFlash: true
 	});
@@ -36,10 +36,6 @@ var postLogin = (req, res, next)=>{
 	});
 
 	return loginStrategy(req, res, next);
-};
-
-var postCreatePair = (req, res, next)=>{
-
 };
 
 var getNewSession = (req, res)=>{
@@ -70,6 +66,7 @@ var getNewSession = (req, res)=>{
 		console.log('We made an API Call!');
 		//This will refresh a session with new data.
 		//Make sure to put something in the {} when we get to users!!!!!  Maybe coupleId: uniqueCoupleId
+		console.log('req.user:',req.user);
 		db.Restaurant.remove({},()=>{
 			restaurantData.businesses.forEach((business)=>{
 			let foodCats = [];
@@ -85,8 +82,8 @@ var getNewSession = (req, res)=>{
 				image: business.image_url,
 				website: business.url,
 				address: business.location.display_address,
-				phone: business.display_phone
-				//coupleId?
+				phone: business.display_phone,
+				couple: req.user.couple
 			};
 			db.Restaurant.create(newRestaurant,(err, newRest)=>{
 				if(err) console.log("Error Creating Restaurant:",err);
@@ -132,7 +129,6 @@ module.exports.getSignup = getSignup;
 module.exports.postSignup = postSignup;
 module.exports.getLogin = getLogin;
 module.exports.postLogin = postLogin;
-module.exports.postCreatePair = postCreatePair;
 module.exports.getNewSession = getNewSession;
 module.exports.getRestaurants = getRestaurants;
 module.exports.deleteRestaurants = deleteRestaurants;
