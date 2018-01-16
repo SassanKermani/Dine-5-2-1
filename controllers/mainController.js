@@ -18,7 +18,7 @@ var postSignup = (req, res, next)=>{
 	console.log(req.body)
 	let signupStrategy=passport.authenticate('local-signup',{
 		//route doesn't have to show a page, but redirect to something that will interact with the user.
-		successRedirect: '/',
+		successRedirect: '/newSession',
 		failureRedirect: '/signup',
 		failureFlash: true
 	});
@@ -34,7 +34,7 @@ var getLogin = (req, res)=>{
 //redirects after login
 var postLogin = (req, res, next)=>{
 	let loginStrategy = passport.authenticate('local-login',{
-		successRedirect: '/Restaurants',
+		successRedirect: '/newSession',
 		failureRedirect: '/login',
 		failureFlash: true
 	});
@@ -42,10 +42,18 @@ var postLogin = (req, res, next)=>{
 	return loginStrategy(req, res, next);
 };
 
-//displays search page
+//displays search page if uninitialized.  Otherwise sends to /Restaurants
 var getNewSession = (req, res)=>{
-	console.log('Got to get new Session');
-	res.render('./partials/newSearch');
+	db.Restaurant.find({couple: req.user.couple}, (err, restaurants)=>{
+		if(restaurants.length>0){
+			console.log('User Session exists.  Redirecting to /Restaurant');
+			console.log('restaurants:',restaurants);
+			res.redirect('/Restaurants');
+		} else{
+			console.log('No Session exists.  Continuing on');
+			res.render('./partials/newSearch');
+		}
+	});
 };
 
 //creates new restaurant reduction session

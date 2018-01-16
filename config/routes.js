@@ -11,7 +11,7 @@ let mainController = require('../controllers/mainController');
 let authenticateUser = (req,res,next)=>{
 	if(req.isAuthenticated()) return next();
 
-	res.redirect('/');
+	res.redirect('/login');
 };
 
 //allows user to continue to remove restaurants only if it is their turn to do so.  Otherwise redirects to a waiting page.

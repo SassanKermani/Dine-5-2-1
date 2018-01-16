@@ -26,6 +26,9 @@ $(document).ready((blah)=>{
 			type: 'DELETE',
 			success: ()=>{
 				$(this).closest('.cardContainer').remove();
+				if($('.card').length ===5 || $('.card'.length ===2)){
+					location.reload(true);
+				}
 			}
 		});
 	});
