@@ -15,7 +15,6 @@ var getSignup = (req, res)=>{
 
 //creates new user
 var postSignup = (req, res, next)=>{
-	console.log(req.body)
 	let signupStrategy=passport.authenticate('local-signup',{
 		//route doesn't have to show a page, but redirect to something that will interact with the user.
 		successRedirect: '/newSession',
@@ -47,7 +46,6 @@ var getNewSession = (req, res)=>{
 	db.Restaurant.find({couple: req.user.couple}, (err, restaurants)=>{
 		if(restaurants.length>0){
 			console.log('User Session exists.  Redirecting to /Restaurant');
-			console.log('restaurants:',restaurants);
 			res.redirect('/Restaurants');
 		} else{
 			console.log('No Session exists.  Continuing on');
@@ -91,41 +89,43 @@ var postNewSession = (req, res)=>{
 		let restaurantData = JSON.parse(body);
 		console.log('We made an API Call!');
 		//This will refresh a session with new data.
-		console.log('req.user:',req.user);
 		db.Restaurant.remove({couple: req.user.couple},()=>{
-			restaurantData.businesses.forEach((business)=>{
-			let foodCats = [];
-			business.categories.forEach((category)=>{
-				foodCats.push(category.title);
+			//checking for valid search results.  If no businesses are returned will send back to search screen
+			if(!restaurantData.businesses){
+				return res.redirect('/newSession');
+			}else{
+				restaurantData.businesses.forEach((business)=>{
+				let foodCats = [];
+				business.categories.forEach((category)=>{
+					foodCats.push(category.title);
+				});
+				let newRestaurant = {
+					name: business.name,
+					categories: foodCats,
+					price: business.price,
+					rating: business.rating,
+					reviews: business.review_count,
+					image: business.image_url,
+					website: business.url,
+					address: business.location.display_address,
+					phone: business.display_phone,
+					couple: req.user.couple
+				};
+				db.Restaurant.create(newRestaurant,(err, newRest)=>{
+					if(err) console.log("Error Creating Restaurant:",err);
+					console.log("Created New Restaurant:",newRest.name);
+				});
 			});
-			let newRestaurant = {
-				name: business.name,
-				categories: foodCats,
-				price: business.price,
-				rating: business.rating,
-				reviews: business.review_count,
-				image: business.image_url,
-				website: business.url,
-				address: business.location.display_address,
-				phone: business.display_phone,
-				couple: req.user.couple
-			};
-			db.Restaurant.create(newRestaurant,(err, newRest)=>{
-				if(err) console.log("Error Creating Restaurant:",err);
-				console.log("Created New Restaurant:",newRest.name);
-			});
-		});
-		if(req.body.whoStarts==="partner"){
-			console.log("User selected partner starts.  Making sure that happens");
 			db.Couple.findOne({_id: req.user.couple}, (err, couple)=>{
 				if(err) return console.log("error searching for couple",err);
-				if(couple.whosUp() == req.user._id){
-					console.log("user is currently up in couple.  Need to swap");
+				if(couple.whosUp() == req.user._id && req.body.whoStarts === "partner"){
 					couple.swap();
-					couple.save((err)=>{
-						if(err) return console.log("error saving swap", err);
-					});
+				}else if(couple.whosUp() != req.user._id && req.body.whoStarts === "user"){
+					couple.swap();
 				}
+				couple.save((err)=>{
+					if(err) return console.log("error saving swap", err);
+				});
 			});
 		}
 		res.redirect('/Restaurants');

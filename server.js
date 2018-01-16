@@ -36,12 +36,11 @@ app.use(flash());
 // //basically, perform the passport.js function, which assigns authorization/authentication functionality
 require('./config/passport')(passport);
 
-// //asigning currentUser
-// app.use((req,res,next)=>{
-// 	res.locals.currentUser = req.user;
-// 	next();
-// });
-
+//asigning currentUser
+app.use((req,res,next)=>{
+	res.locals.currentUser = req.user;
+	next();
+});
 
 app.use('/', router);
 

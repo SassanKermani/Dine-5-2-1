@@ -21,6 +21,7 @@ CoupleSchema.methods.whosUp = function(){
 	
 };
 
+//changes starting user.  need to SAVE after calling this or it reverts.
 CoupleSchema.methods.swap = function(){
 	if (this.whosTurn===this.user1){
 		console.log('User 1 turn is over.  User 2 is up');
@@ -33,6 +34,7 @@ CoupleSchema.methods.swap = function(){
 
 CoupleSchema.methods.addToFavorites = function(Restaurant){
 	console.log('adding restaurant',Restaurant.name,'to favorites!');
+	//probably need to update this Restaurant's ID to fav+_id...  maybe connect and disconnect to save it?
 	this.favorites.push(Restaurant);
 };
 
