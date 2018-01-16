@@ -173,11 +173,32 @@ var deleteRestaurants = (req, res)=>{
 	});
 };
 
+//displays a single restaurant and allows saving to favorites
+var getEatHere = (req,res)=>{
+	console.log('getting to EatHere');
+	db.Restaurant.findOne({couple: req.user.couple}, (err, restaurant)=>{
+		if(err) console.log('there has been an error',err);
+		res.render('eatHere', {restaurant:restaurant});
+	});
+
+};
+
+//removes all restaurants for the couple and redirects to /newSession
+var getReset = (req,res)=>{
+	db.Restaurant.remove({couple: req.user.couple},(err)=>{
+		if(err) console.log("error removing restaurants",err);
+		res.redirect('/newSession');
+	});
+};
+
 //Waiting Page.  Will put Shakeitspeare Poetry in here.
 var getWaiting = (req, res)=>{
 	console.log("And now we wait");
 	//http://shakeitspeare.com/api/poem?lines=12&markov=5
-	res.send("and now we wait");
+	request.get("http://shakeitspeare.com/api/poem?lines=12&markov=5", (err, reqApi, body)=>{
+		res.render('waiting',{poem: JSON.parse(body).poem});
+	});
+	// res.send("and now we wait");
 };
 
 var getLogout = (req, res)=>{
@@ -197,6 +218,8 @@ module.exports.getNewSession = getNewSession;
 module.exports.postNewSession = postNewSession;
 module.exports.getRestaurants = getRestaurants;
 module.exports.deleteRestaurants = deleteRestaurants;
+module.exports.getEatHere = getEatHere;
+module.exports.getReset = getReset;
 module.exports.getWaiting = getWaiting;
 module.exports.getLogout = getLogout;
 module.exports.getBadRoutes = getBadRoutes;

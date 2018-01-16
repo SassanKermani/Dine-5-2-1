@@ -1,0 +1,30 @@
+<% include ./partials/header.ejs %>	
+	<h1>Bon Apetit!</h1>
+	<div class = "container-fluid">
+		<div class = "container">
+			<div class = "row flex-row flex-sm-nowrap">
+				<div class = "cardContainer col-sm-12 col-md-6 col-lg-4 col-xl-3" data-restaurant-id=<%= restaurant._id %> >
+					<div class = "card card-block border-primary mb-4">
+						<div>
+							<img class = "card-img-top pb-2" src = <%= restaurant.image %> alt = "card">
+							<div class = "card-img-overlay relative-top">
+								<h4 class = "align-top card-title"><%= restaurant.name %></h4>
+								<h6 class = "align-bottom card-subtitle"><%= restaurant.price %>, <%= restaurant.rating %> Stars</h6>
+							</div>
+						</div>
+						<div class = "scroll-box px-2">
+							<p class = "card-text"><% restaurant.categories.forEach((category)=>{ %><%= category %>, <%;}) %></p>
+							<a class = "card-text" href = <%= restaurant.website %> target="_blank"><%= restaurant.name %>'s Yelp Page</a>
+							<p class = "card-text"><%= restaurant.address %></p>
+							<p class = "card-text"><%= restaurant.phone %></p>
+						</div>
+						<div class = "sticky-bottom text-center py-1">
+							<button type = "button" class = "btn btn-success">Favorite</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<% include ./partials/footer.ejs %>	

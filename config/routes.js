@@ -71,6 +71,12 @@ router.route('/newSession')
 router.route('/Restaurants')
  	.get(authenticateUser, isUsersTurn, mainController.getRestaurants);
 
+router.route('/eatHere')
+	.get(authenticateUser, mainController.getEatHere);
+
+router.route('/reset')
+	.get(authenticateUser, mainController.getReset);
+
 router.route('/waiting')
 	.get(authenticateUser, notUsersTurn, mainController.getWaiting);
 

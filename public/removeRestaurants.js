@@ -6,9 +6,9 @@ $(document).ready((blah)=>{
 	let numRestaurants = $('.card').length;
 	console.log("The Number of Restaurants is",numRestaurants);
 
-	//figures out how many card need to be left for this round of play
+	//figures out how many card need to be left for this round of play.  If 1 redirects to /eatHere
 	if(numRestaurants === 1){
-		//SWITCH IT UP BRO!
+		window.location.replace('/eatHere');
 	}else{
 		console.log("Howdy",numRestaurants);
 		if(numRestaurants>5){
@@ -26,7 +26,10 @@ $(document).ready((blah)=>{
 			type: 'DELETE',
 			success: ()=>{
 				$(this).closest('.cardContainer').remove();
+				alert("cards left:"+$('.card').length);
 				if($('.card').length ===5 || $('.card'.length ===2)){
+					location.reload(true);
+				}else if($('.card'.length ===1)){
 					location.reload(true);
 				}
 			}
