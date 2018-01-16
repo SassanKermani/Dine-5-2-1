@@ -7,23 +7,32 @@ let Couple = require('../models').Couple;
 
 let mainController = require('../controllers/mainController');
 
+//allows visitor to continue only if they are authenticated users.  Otherwise redirects to landing page.
 let authenticateUser = (req,res,next)=>{
 	if(req.isAuthenticated()) return next();
 
 	res.redirect('/');
 };
 
+//allows user to continue to remove restaurants only if it is their turn to do so.  Otherwise redirects to a waiting page.
 let isUsersTurn = (req,res,next)=>{
 	console.log("In isUsersTurn");
 	Couple.findOne({_id: req.user.couple}, (err, couple)=>{
 		if(err) return console.log("there has been an error in isUsersTurn finding couple.",err);
 		console.log("couple",couple);
-		if(req.user._id === couple.whosUp()) return next();
+		if(req.user._id == couple.whosUp()){ 
+			console.log("We got in here, so what's up?");
+			return next();
+		}
 
+		console.log("USER IS: ",req.user._id);
+		console.log("Couple : ",couple.whosUp());
 		res.redirect('/waiting');
 	});
 };
 
+//will redirect other user to restaurants when their turn is up.  
+//*EDIT: This is dumb and unnecessary.  Refactor later
 let notUsersTurn = (req,res,next)=>{
 	console.log("In notUsersTurn");
 	Couple.findOne({_id: req.user.couple}, (err, couple)=>{

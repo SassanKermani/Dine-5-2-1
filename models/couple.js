@@ -9,8 +9,16 @@ let CoupleSchema = new Schema({
 	favorites: [Restaurant.schema]
 });
 
+//hotfix to ensure an unregistered user 2 won't break the app
 CoupleSchema.methods.whosUp = function(){
-	return this.whosTurn;
+	if(this.whosTurn === this.user1){
+		console.log('User 1 Is Up');
+		return this.whosTurn;
+	} else{
+		console.log('User 2 is Up');
+		return this.user2;
+	}
+	
 };
 
 CoupleSchema.methods.swap = function(){

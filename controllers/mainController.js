@@ -8,10 +8,12 @@ let db = require('../models');
 //keys and tokens
 let bearerToken = process.env.bearerToken || require('../config/env').bearerToken;
 
+//displays signup Page.
 var getSignup = (req, res)=>{
 	res.render('signup', { message: req.flash('signupMessage')});
 };
 
+//creates new user
 var postSignup = (req, res, next)=>{
 	console.log(req.body)
 	let signupStrategy=passport.authenticate('local-signup',{
@@ -24,10 +26,12 @@ var postSignup = (req, res, next)=>{
 	return signupStrategy(req, res, next);
 };
 
+//displays login page
 var getLogin = (req, res)=>{
 	res.render('login', { message: req.flash('signupMessage')});
 };
 
+//redirects after login
 var postLogin = (req, res, next)=>{
 	let loginStrategy = passport.authenticate('local-login',{
 		successRedirect: '/Restaurants',
@@ -38,17 +42,23 @@ var postLogin = (req, res, next)=>{
 	return loginStrategy(req, res, next);
 };
 
+//displays search page
 var getNewSession = (req, res)=>{
 	console.log('Got to get new Session');
 	res.render('./partials/newSearch');
 };
 
+//creates new restaurant reduction session
 var postNewSession = (req, res)=>{
 	console.log('got to post new session');
+
 	//removing spaces from address and adding + signs
 	let address = req.body.address.replace(/ /g, '+');
+
 	//setting default search parameter for price to everything
 	let price = '1,2,3,4';
+
+	console.log("req.body.whoStarts:",req.body.whoStarts);
 	//updating search paramters to what user input
 	if(req.body.OneDollar || req.body.TwoDollar || req.body.ThreeDollar || req.body.FourDollar){
 		price = '';
@@ -60,6 +70,7 @@ var postNewSession = (req, res)=>{
 		price = price.slice(0,-1);
 	}
 
+	//this is how we create the URL for Yelp's API
 	let options = {
 		//removing &radius=8000 to see if i get better results
 		url: 'https://api.yelp.com/v3/businesses/search?location='+address+'&price='+price+'&sort_by=rating&term=food&open_now=true&limit=25',
@@ -102,6 +113,7 @@ var postNewSession = (req, res)=>{
 	});
 };
 
+//Restaurant Reduction Page.
 var getRestaurants = (req, res)=>{
 	db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
 		if(err) console.log('There has been an error',err);
@@ -110,21 +122,41 @@ var getRestaurants = (req, res)=>{
 	});
 };
 
+//Allows users to reduce restaurants to 5, 2, or 1.  Will swap user when applicable
 var deleteRestaurants = (req, res)=>{
-	console.log("Hit Delete Route!  Id:",req.params.id);
+	console.log("Hit Delete Route!");
 	db.Restaurant.remove({_id:req.params.id}, (err,restaurant)=>{
 		console.log('Restaurant Deleted!');
 		//functionality for determining whether we keep allowing this or change the page.
 		//COUPLE ID!!!
 		db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
-			console.log(restaurants.length,"restaurants left");;
+			console.log(restaurants.length,"restaurants left");
+			if(restaurants.length===1){
+				res.redirect('/eatHere');
+			}else if(restaurants.length ===2 || restaurants.length===5){
+				console.log("Time to switch users!");
+				db.Couple.findOne({_id: req.user.couple}, (err, couple)=>{
+					if(err) console.log("there has been an error,",err);
+					console.log('swapping users, couple:',couple);
+					couple.swap();
+					couple.save((err)=>{
+						if(err) return console.log("there has been an error saving coupleSwap", err);
+						console.log('swapped users, couple: ', couple);
+						res.redirect(303,'/waiting');
+
+					});
+				});
+			}else{
+				res.send('restaurant deleted!  Should not be here if restaurant length is 5, 2, or 1');
+			}
 		});
-		res.send('restaurant deleted!');
 	});
 };
 
+//Waiting Page.  Will put Shakeitspeare Poetry in here.
 var getWaiting = (req, res)=>{
 	console.log("And now we wait");
+	//http://shakeitspeare.com/api/poem?lines=12&markov=5
 	res.send("and now we wait");
 };
 
