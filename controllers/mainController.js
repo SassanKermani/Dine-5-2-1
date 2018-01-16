@@ -108,6 +108,19 @@ var postNewSession = (req, res)=>{
 				console.log("Created New Restaurant:",newRest.name);
 			});
 		});
+		if(req.body.whoStarts==="partner"){
+			console.log("User selected partner starts.  Making sure that happens");
+			db.Couple.findOne({_id: req.user.couple}, (err, couple)=>{
+				if(err) return console.log("error searching for couple",err);
+				if(couple.whosUp() == req.user._id){
+					console.log("user is currently up in couple.  Need to swap");
+					couple.swap();
+					couple.save((err)=>{
+						if(err) return console.log("error saving swap", err);
+					});
+				}
+			});
+		}
 		res.redirect('/Restaurants');
 		});
 	});
