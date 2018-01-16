@@ -1,0 +1,31 @@
+<% include ./partials/header.ejs %>
+	<h3>Choose Search Parameters</h3>
+	<form action="/newSession" method="POST">
+		<input type="text" name="address" placeholder="Full Address, City, or Zip Code">
+		<div class = "form-check form-check-inline">
+			<input class = "form-check-input" type = "checkbox" id = "OneDollar" name = "OneDollar" value = "1">
+			<label class = "form-check-label" for = "OneDollar">$</label>
+		</div>
+		<div class = "form-check form-check-inline">
+			<input class = "form-check-input" type = "checkbox" id = "TwoDollar" name = "TwoDollar" value = "2">
+			<label class = "form-check-label" for = "TwoDollar">$$</label>
+		</div>
+		<div class = "form-check form-check-inline">
+			<input class = "form-check-input" type = "checkbox" id = "ThreeDollar" name = "ThreeDollar" value = "3">
+			<label class = "form-check-label" for = "ThreeDollar">$$$</label>
+		</div>
+		<div class = "form-check form-check-inline">
+			<input class = "form-check-input" type = "checkbox" id = "FourDollar" name = "FourDollar" value = "4">
+			<label class = "form-check-label" for = "OneDollar">$$$$</label>
+		</div>
+		<div class = "form-check form-check-inline">
+			<input class = "form-check-input" type = "radio" name ="whoStarts" id = "userStarts" value = "user" checked>
+			<label class = "form-check-label" for = "userStarts">I Will Start</label>
+		</div>
+		<div class = "form-check form-check-inline">
+			<input class = "form-check-input" type = "radio" name ="whoStarts" id = "partnerStarts" value = "partner">
+			<label class = "form-check-label" for = "partnerStarts">My Partner Will Start</label>
+		</div>
+		<input type="submit">
+	</form>
+<% include ./partials/footer.ejs %>

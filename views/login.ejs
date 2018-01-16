@@ -1,10 +1,12 @@
-<h3>Login Page</h3>
-<% if (message.length > 0) { %>
-	<div class = "alert alert-danger"><%=message%></div>
-<% } %>
-<form action="/login" method="POST">
-	<input type="email" name="email" placeholder="youremail@domain.com">
-	<input type="password" name="password" placeholder="your password">
-	<input type="submit">
-</form>
-<a href = "/signup">New Members Click Here</a>
+<% include ./partials/header.ejs %>
+	<h3>Login Page</h3>
+	<% if (message.length > 0) { %>
+		<div class = "alert alert-danger"><%=message%></div>
+	<% } %>
+	<form action="/login" method="POST">
+		<input type="email" name="email" placeholder="youremail@domain.com">
+		<input type="password" name="password" placeholder="your password">
+		<input type="submit">
+	</form>
+	<a href = "/signup">New Members Click Here</a>
+<% include ./partials/footer.ejs %>
