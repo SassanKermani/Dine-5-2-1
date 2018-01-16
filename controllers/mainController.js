@@ -92,6 +92,7 @@ var postNewSession = (req, res)=>{
 		console.log('We made an API Call!');
 		//This will refresh a session with new data.
 		//Make sure to put something in the {} when we get to users!!!!!  Maybe coupleId: uniqueCoupleId
+		console.log('restaurantData:',restaurantData);
 		console.log('req.user:',req.user);
 		db.Restaurant.remove({couple: req.user.couple},()=>{
 			restaurantData.businesses.forEach((business)=>{
