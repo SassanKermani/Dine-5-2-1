@@ -2,6 +2,14 @@ body{
 	background-color:#002970;
 }
 
+h3{
+	font-size: 4vh;
+}
+
+form{
+	font-size: 3vh;
+} 
+
 input:focus:valid{
 	background-color: rgba(66, 244, 66, .3);
 }

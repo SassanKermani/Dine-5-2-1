@@ -6,6 +6,18 @@ h1,h3,h5{
 	color: #ff9f00;
 }
 
+h1{
+	font-size: 6vh;
+}
+
+h3{
+	font-size: 4vh;
+}
+
+h5{
+	font-size: 3vh;
+}
+
 a {
 	display: block;
 }
