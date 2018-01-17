@@ -23,12 +23,17 @@ The original user will select the restaurant they are going to.
 -Passport
 -Request
 -EJS
+-Mongoose
+
+##### MongoDB
 
 ##### JavaScript
 -JQuery
 
 #####CSS & HTML
 -Bootstrap
+
+##### Heroku
 
 
 
