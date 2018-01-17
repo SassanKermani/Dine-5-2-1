@@ -12,7 +12,7 @@ The partner will reduce that list of 5 to 2, then send it to the original user.
 The original user will select the restaurant they are going to.
 
 #### Wireframe(s)
-![](/assets/wireframe.jpg){:height="50%" width="50%"}
+![](wireframe.jpg){:height="50%" width="50%"}
 
 [Link to Trello Board](https://trello.com/b/ifEdQEDW/project-2)
 
@@ -27,7 +27,7 @@ The original user will select the restaurant they are going to.
 ##### JavaScript
 -JQuery
 
-##### CSS & HTML
+#####CSS & HTML
 -Bootstrap
 
 
