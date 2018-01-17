@@ -15,6 +15,9 @@ module.exports = function(passport){
 		});
 	});
 
+	//This will take user inputs from the signup form and create a user and couple.  
+	//If it is the first user, it will store their partner's email.  
+	//If the second user, it will replace the holder email with the userId
 	passport.use('local-signup', new LocalStrategy({
 		usernameField: 'email',
 		//not required, but just for learning's sake.  PasswordField's default is password

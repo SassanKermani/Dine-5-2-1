@@ -183,7 +183,7 @@ var getReset = (req,res)=>{
 	});
 };
 
-//Waiting Page.  Will put Shakeitspeare Poetry in here.
+//Waiting Page.  Fills Shakeitspeare Poetry.
 var getWaiting = (req, res)=>{
 	//http://shakeitspeare.com/api/poem?lines=12&markov=5
 	request.get("http://shakeitspeare.com/api/poem?lines=12&markov=5", (err, reqApi, body)=>{
@@ -215,11 +215,13 @@ var postFavorites = (req, res)=>{
 
 };
 
+//logs out the user
 var getLogout = (req, res)=>{
 	req.logout();
 	res.redirect('/');
 };
 
+//catches all invalid routes.
 var getBadRoutes = (req, res)=>{
 	res.send('You have attempted to reach a page that does not exist');
 };
