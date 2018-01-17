@@ -53,6 +53,7 @@ var getNewSession = (req, res)=>{
 };
 
 //creates new restaurant reduction session
+//CREATE
 var postNewSession = (req, res)=>{
 
 	//removing spaces from address and adding + signs
@@ -128,6 +129,7 @@ var postNewSession = (req, res)=>{
 };
 
 //Restaurant Reduction Page.
+//INDEX
 var getRestaurants = (req, res)=>{
 	db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
 		if(err) console.log('There has been an error',err);
@@ -136,6 +138,7 @@ var getRestaurants = (req, res)=>{
 };
 
 //Allows users to reduce restaurants to 5, 2, or 1.  Will swap user when applicable
+//DELETE
 var deleteRestaurants = (req, res)=>{
 	db.Restaurant.remove({_id:req.params.id}, (err,restaurant)=>{
 		//functionality for determining whether we keep allowing this or change the page.
@@ -162,6 +165,7 @@ var deleteRestaurants = (req, res)=>{
 };
 
 //displays a single restaurant and allows saving to favorites
+//SHOW
 var getEatHere = (req,res)=>{
 	console.log('getting to EatHere');
 	db.Restaurant.findOne({couple: req.user.couple}, (err, restaurant)=>{
@@ -190,9 +194,10 @@ var getWaiting = (req, res)=>{
 };
 
 var getFavorites = (req, res)=>{
-
+//fill with stuff
 };
 
+//takes input from user click and does magic to store the favorite as an independent restaurant in favorites(alters _id to fav+id)
 var postFavorites = (req, res)=>{
 	console.log(req.body.favorite);
 	db.Couple.findOne({_id: req.user.couple}, (err,couple)=>{
