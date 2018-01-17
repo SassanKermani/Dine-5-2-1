@@ -3,6 +3,8 @@ const router = require('express').Router();
 
 const passport = require('passport');
 
+let Restaurant = require('../models').Restaurant;
+
 let Couple = require('../models').Couple;
 
 let mainController = require('../controllers/mainController');
@@ -23,6 +25,18 @@ let isUsersTurn = (req,res,next)=>{
 		}
 
 		res.redirect('/waiting');
+	});
+};
+
+let isOver = (req, res, next)=>{
+	Couple.findOne({_id: req.user.couple}, (err, couple)=>{
+		if(err) return console.log("there has been an error in isOver finding couple.",err);
+		Restaurant.find({couple: couple._id}, (err, restaurants)=>{
+			if(err) return console.log("there has been an error in isOver finding restaurants.",err);
+			if(restaurants.length===1){
+				res.redirect('/eatHere');
+			} else return next();
+		});
 	});
 };
 
@@ -70,7 +84,11 @@ router.route('/reset')
 	.get(authenticateUser, mainController.getReset);
 
 router.route('/waiting')
-	.get(authenticateUser, notUsersTurn, mainController.getWaiting);
+	.get(authenticateUser, isOver, notUsersTurn, mainController.getWaiting);
+
+router.route('/favorites')
+	.post(authenticateUser, mainController.postFavorites)
+	.get(authenticateUser, mainController.getFavorites);
 
 router.route('/logout')
 	.get(mainController.getLogout);

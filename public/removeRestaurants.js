@@ -8,7 +8,6 @@ $(document).ready((blah)=>{
 	if(numRestaurants === 1){
 		window.location.replace('/eatHere');
 	}else{
-		console.log("Howdy",numRestaurants);
 		if(numRestaurants>5){
 			var numToLeave = 5;
 		}else{

@@ -32,10 +32,10 @@ CoupleSchema.methods.swap = function(){
 	}
 };
 
-CoupleSchema.methods.addToFavorites = function(Restaurant){
-	console.log('adding restaurant',Restaurant.name,'to favorites!');
+CoupleSchema.methods.addToFavorites = function(restaurant){
+	console.log('adding restaurant',restaurant.name,'to favorites!');
 	//probably need to update this Restaurant's ID to fav+_id...  maybe connect and disconnect to save it?
-	this.favorites.push(Restaurant);
+	this.favorites.push(restaurant);
 };
 
 let Couple = mongoose.model('Couple', CoupleSchema);

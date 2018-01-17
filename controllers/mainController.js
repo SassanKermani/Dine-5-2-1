@@ -189,6 +189,27 @@ var getWaiting = (req, res)=>{
 	// res.send("and now we wait");
 };
 
+var getFavorites = (req, res)=>{
+
+};
+
+var postFavorites = (req, res)=>{
+	console.log(req.body.favorite);
+	db.Couple.findOne({_id: req.user.couple}, (err,couple)=>{
+		if(err) console.log("error finding couple in postFavorites",err);
+		db.Restaurant.findOne({_id: req.body.favorite}, (err,restaurant)=>{
+			if(err) console.log("error finding restaurant in postFavorites",err);
+			restaurant._id = "fav"+restaurant._id;
+			couple.addToFavorites(restaurant);
+			couple.save((err)=>{
+				if(err) console.log("error saving couple in postFavorites");
+				res.send('success!');
+			});
+		});
+	});
+
+};
+
 var getLogout = (req, res)=>{
 	req.logout();
 	res.redirect('/');
@@ -209,5 +230,7 @@ module.exports.deleteRestaurants = deleteRestaurants;
 module.exports.getEatHere = getEatHere;
 module.exports.getReset = getReset;
 module.exports.getWaiting = getWaiting;
+module.exports.getFavorites = getFavorites;
+module.exports.postFavorites = postFavorites;
 module.exports.getLogout = getLogout;
 module.exports.getBadRoutes = getBadRoutes;
