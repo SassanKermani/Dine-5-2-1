@@ -45,7 +45,7 @@ let isOver = (req, res, next)=>{
 let notUsersTurn = (req,res,next)=>{
 	Couple.findOne({_id: req.user.couple}, (err, couple)=>{
 		if(err) return console.log("there has been an error in notUsersTurn finding couple.",err);
-		if(req.user._id !== couple.whosUp()) return next();
+		if(req.user._id != couple.whosUp()) return next();
 
 		res.redirect('/Restaurants');
 	});
