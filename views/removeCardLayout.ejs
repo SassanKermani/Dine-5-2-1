@@ -4,9 +4,9 @@
 	</div>
 	<div class = "container-fluid">
 		<div class = "container">
-			<div class = "row flex-row flex-sm-nowrap">
+			<div class = "row flex-row flex-md-nowrap">
 				<% for(let i = 0; i < restaurants.length; ++i){ %>
-					<div class = "cardContainer col-sm-12 col-md-6 col-lg-4 col-xl-3" data-restaurant-id=<%= restaurants[i]._id %> >
+					<div class = "cardContainer col-12 col-lg-4 col-xl-3" data-restaurant-id=<%= restaurants[i]._id %> >
 						<div class = "card card-block border-primary mb-4">
 							<div>
 								<img class = "card-img-top pb-2" src = <%= restaurants[i].image %> alt = "card">
