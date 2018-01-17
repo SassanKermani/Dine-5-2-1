@@ -15,8 +15,17 @@ h1,h2,h3,h4,h5,h6{
 	color: black;
 }
 
+h3{
+	font-size: 4.5vh;
+}
+
+h5{
+	font-size: 3vh;
+}
+
 div{
 	color: yellow;
+	font-size: 2.7vh;
 }
 
 .card{
@@ -31,11 +40,11 @@ div{
 }
 
 .card h4{
-	font-size: 4vh;
+	font-size: 3.6vh;
 }
 
 .card h6{
-	font-size: 3vh;
+	font-size: 2.7vh;
 }
 
 .card p,a{
