@@ -6,12 +6,10 @@ let Couple = db.Couple;
 
 module.exports = function(passport){
 	passport.serializeUser(function(user,callback){
-		console.log('serializing user');
 		callback(null,user.id);
 	});
 
 	passport.deserializeUser(function(id,callback){
-		console.log('deserializing user');
 		User.findById(id, function(err,user){
 			callback(err, user);
 		});
@@ -31,17 +29,13 @@ module.exports = function(passport){
 			} else{
 				let newUser = new User();
 				newUser.email = email;
-				console.log('req.body is',req.body);
 				newUser.password = password;
 				newUser.save((err)=>{
 					if(err) return callback(err);
-					console.log('created user, now creating couple');
 					//if there is a couple created, user 2 is temporarily stored as email(identified by user1).  Once found converted to id.
 					Couple.findOne({user2:newUser.email}, function(err, couple){
 						if(err) return callback(err);
-						console.log('couple found was: ', couple);
 						if(couple){
-							console.log("we found a couple!", couple);
 							couple.user2 = newUser._id;
 							couple.save((err)=>{
 								if(err)return console.log("Error in saving Couple", err);
@@ -49,11 +43,9 @@ module.exports = function(passport){
 							newUser.couple = couple._id;
 							newUser.save((err=>{
 								if(err) return console.log("error in saving User", err);
-								console.log("We DID IT!  WE PAIRED USERS!");
 								return callback(null, newUser);
 							}));
 						}else{
-							console.log('No Couple found, creating new one');
 							let newCouple = new Couple();
 							newCouple.user1 = newUser._id;
 							newCouple.user2 = req.body.partner;
@@ -64,13 +56,10 @@ module.exports = function(passport){
 							newUser.couple = newCouple._id;
 							newUser.save((err)=>{
 								if(err) return console.log("error in saving newUser CoupleId",err);
-								console.log("WE DID IT!  WE MADE A COUPLE!");
 								return callback(null, newUser);
 							});
 						}
 					});
-					console.log("I SHOULD NEVER GET HERE!");
-					// return callback(null, newUser);
 				});
 			}
 		});
@@ -82,7 +71,6 @@ module.exports = function(passport){
 		passReqToCallback: true
 	}, (req, email, password, callback)=>{
 		User.findOne({'email': email}, (err, user)=>{
-			console.log(user);
 			if(err) return callback(err);
 
 			if(!user){

@@ -1,8 +1,19 @@
-/*refactor for sass:  embed!*/
+
+body{
+	background-color:#002970;
+}
+
+header{
+	background-color:#002970
+}
+
+h1{
+	color: #f4ac33;
+}
 
 .card{
 	position:relative;
-	height:60vh;
+	height:70vh;
 	font-size: 1.2rem;
 }
 
@@ -12,16 +23,16 @@
 }
 
 .card-img-overlay{
-	height:22vh;
+	height:25vh;
 }
 
 .card img{
-	height: 22vh;
+	height: 25vh;
 	object-fit: cover;
 }
 
 /*works for now, but isn't as clean as I'd like.  Figure out later.*/
 .card .scroll-box{
-	height:38vh;
+	height:45vh;
 	overflow-y: scroll;
 }

@@ -1,10 +1,8 @@
 $(document).ready((blah)=>{
-	console.log('removeRestaurants up and running');
 	let restaurantsToDelete = [];
 
 	//determines the number of restaurants send back from the server.  App logic depends on this.  Break case is only 5 were found initially.  Refactor later
 	let numRestaurants = $('.card').length;
-	console.log("The Number of Restaurants is",numRestaurants);
 
 	//figures out how many card need to be left for this round of play.  If 1 redirects to /eatHere
 	if(numRestaurants === 1){
@@ -18,15 +16,12 @@ $(document).ready((blah)=>{
 		}
 	$('#numToLeave').text(numToLeave);
 	}
-	console.log("NumToLeavePotato:",numToLeave);
 	$('button').click(function(){
-		console.log("Removing Id",$(this).closest('.cardContainer').data('restaurant-id'));
 		$.ajax({
 			url: '/Restaurants/' + $(this).closest('.cardContainer').data('restaurant-id'),
 			type: 'DELETE',
 			success: ()=>{
 				$(this).closest('.cardContainer').remove();
-				alert("cards left:"+$('.card').length);
 				if($('.card').length ===5 || $('.card'.length ===2)){
 					location.reload(true);
 				}else if($('.card'.length ===1)){

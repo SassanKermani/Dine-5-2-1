@@ -45,10 +45,8 @@ var postLogin = (req, res, next)=>{
 var getNewSession = (req, res)=>{
 	db.Restaurant.find({couple: req.user.couple}, (err, restaurants)=>{
 		if(restaurants.length>0){
-			console.log('User Session exists.  Redirecting to /Restaurant');
 			res.redirect('/Restaurants');
 		} else{
-			console.log('No Session exists.  Continuing on');
 			res.render('./newSearch');
 		}
 	});
@@ -56,7 +54,6 @@ var getNewSession = (req, res)=>{
 
 //creates new restaurant reduction session
 var postNewSession = (req, res)=>{
-	console.log('got to post new session');
 
 	//removing spaces from address and adding + signs
 	let address = req.body.address.replace(/ /g, '+');
@@ -64,7 +61,6 @@ var postNewSession = (req, res)=>{
 	//setting default search parameter for price to everything
 	let price = '1,2,3,4';
 
-	console.log("req.body.whoStarts:",req.body.whoStarts);
 	//updating search paramters to what user input
 	if(req.body.OneDollar || req.body.TwoDollar || req.body.ThreeDollar || req.body.FourDollar){
 		price = '';
@@ -87,7 +83,6 @@ var postNewSession = (req, res)=>{
 	request.get(options, (err, reqApi, body)=>{
 		if(err) console.log('there has been an error', err);
 		let restaurantData = JSON.parse(body);
-		console.log('We made an API Call!');
 		//This will refresh a session with new data.
 		db.Restaurant.remove({couple: req.user.couple},()=>{
 			//checking for valid search results.  If no businesses are returned will send back to search screen
@@ -113,7 +108,6 @@ var postNewSession = (req, res)=>{
 				};
 				db.Restaurant.create(newRestaurant,(err, newRest)=>{
 					if(err) console.log("Error Creating Restaurant:",err);
-					console.log("Created New Restaurant:",newRest.name);
 				});
 			});
 			db.Couple.findOne({_id: req.user.couple}, (err, couple)=>{
@@ -137,16 +131,13 @@ var postNewSession = (req, res)=>{
 var getRestaurants = (req, res)=>{
 	db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
 		if(err) console.log('There has been an error',err);
-		console.log("Making",restaurants.length,"restaurants");
 		res.render('./removeCardLayout',{restaurants:restaurants});
 	});
 };
 
 //Allows users to reduce restaurants to 5, 2, or 1.  Will swap user when applicable
 var deleteRestaurants = (req, res)=>{
-	console.log("Hit Delete Route!");
 	db.Restaurant.remove({_id:req.params.id}, (err,restaurant)=>{
-		console.log('Restaurant Deleted!');
 		//functionality for determining whether we keep allowing this or change the page.
 		//COUPLE ID!!!
 		db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
@@ -154,14 +145,11 @@ var deleteRestaurants = (req, res)=>{
 			if(restaurants.length===1){
 				res.redirect('/eatHere');
 			}else if(restaurants.length ===2 || restaurants.length===5){
-				console.log("Time to switch users!");
 				db.Couple.findOne({_id: req.user.couple}, (err, couple)=>{
 					if(err) console.log("there has been an error,",err);
-					console.log('swapping users, couple:',couple);
 					couple.swap();
 					couple.save((err)=>{
 						if(err) return console.log("there has been an error saving coupleSwap", err);
-						console.log('swapped users, couple: ', couple);
 						res.redirect(303,'/waiting');
 
 					});
@@ -193,10 +181,10 @@ var getReset = (req,res)=>{
 
 //Waiting Page.  Will put Shakeitspeare Poetry in here.
 var getWaiting = (req, res)=>{
-	console.log("And now we wait");
 	//http://shakeitspeare.com/api/poem?lines=12&markov=5
 	request.get("http://shakeitspeare.com/api/poem?lines=12&markov=5", (err, reqApi, body)=>{
-		res.render('waiting',{poem: JSON.parse(body).poem});
+		let poem = JSON.parse(body).poem.match( /[^\.!\?]+[\.!\?]+/g);
+		res.render('waiting',{poem: poem});
 	});
 	// res.send("and now we wait");
 };
