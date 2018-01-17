@@ -143,7 +143,7 @@ var deleteRestaurants = (req, res)=>{
 		db.Restaurant.find({couple: req.user.couple},(err, restaurants)=>{
 			console.log(restaurants.length,"restaurants left");
 			if(restaurants.length===1){
-				res.redirect('/eatHere');
+				res.redirect(303,'/eatHere');
 			}else if(restaurants.length ===2 || restaurants.length===5){
 				db.Couple.findOne({_id: req.user.couple}, (err, couple)=>{
 					if(err) console.log("there has been an error,",err);
