@@ -16,6 +16,7 @@ $(document).ready((blah)=>{
 		}
 	$('#numToLeave').text(numToLeave);
 	}
+
 	$('button').click(function(){
 		$.ajax({
 			url: '/Restaurants/' + $(this).closest('.cardContainer').data('restaurant-id'),

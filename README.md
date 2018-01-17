@@ -12,7 +12,7 @@ The partner will reduce that list of 5 to 2, then send it to the original user.
 The original user will select the restaurant they are going to.
 
 #### Wireframe(s)
-![](wireframe.jpg){:height="50%" width="50%"}
+<img src = "wireframe.jpg" width="600" height="800">
 
 [Link to Trello Board](https://trello.com/b/ifEdQEDW/project-2)
 
@@ -34,6 +34,24 @@ The original user will select the restaurant they are going to.
 -Bootstrap
 
 ##### Heroku
+
+
+#### Approach Taken:
+Started with server.js and functioning API call and save to Mongo via restaurant models.
+Then, worked on displaying Mongo data to the screen and manipulating it both on back & front ends.
+Implemented authentication/authorization via passport and added a Couple model.
+Worked on route logic until it was in decent shape.
+...Style...
+
+
+#### Installation Instructions:
+No installation should be necessary for users.  Head to the [heroku hosted site](https://dine5-2-1.herokuapp.com/) to use it.
+
+
+#### Unsolved Problems:
+Styling is not pretty, but fully functional.
+Some UX data would be helpful in ensuring usability.
+A few areas of code are redundant and unnecessary.  Improve logic.
 
 
 

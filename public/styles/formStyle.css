@@ -2,7 +2,6 @@ body{
 	background-color:#002970;
 }
 
-
 input:focus:valid{
 	background-color: rgba(66, 244, 66, .3);
 }
